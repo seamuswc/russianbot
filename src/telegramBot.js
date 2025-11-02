@@ -786,8 +786,8 @@ Here's your first lesson:`;
         wordBreakdown = '\n\n📚 Word Breakdown:\n';
         for (const word of sentenceData.word_breakdown) {
           if (typeof word === 'object' && word.word && word.meaning) {
-            const pinyin = word.pinyin || '';
-            wordBreakdown += `${word.word} - ${word.meaning} - ${pinyin}\n`;
+            const pronunciation = word.pronunciation || '';
+            wordBreakdown += `${word.word} - ${word.meaning}${pronunciation ? ` - ${pronunciation}` : ''}\n`;
           } else if (typeof word === 'string') {
             wordBreakdown += `${word}\n`;
           }
