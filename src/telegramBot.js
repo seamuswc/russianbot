@@ -289,12 +289,12 @@ class TelegramBotHandler {
       console.log(`💰 USDT Amount: ${config.USDT_AMOUNT} USDT (${usdtAmount} microUSDT)`);
       console.log(`🔗 Reference: ${paymentReference}`);
       
-      // Create TON deep link (correct format: ton://ADDRESS/transfer?amount=...)
-      const tonDeepLink = `ton://${config.TON_ADDRESS}/transfer?amount=${tonAmountNano}&text=${encodeURIComponent(paymentReference)}`;
+      // Create TON deep link (correct format: ton://transfer/ADDRESS?amount=...)
+      const tonDeepLink = `ton://transfer/${config.TON_ADDRESS}?amount=${tonAmountNano}&text=${encodeURIComponent(paymentReference)}`;
       console.log(`🔗 TON Deep Link: ${tonDeepLink}`);
       
-      // Create TON Native USDT deep link (correct format: ton://ADDRESS/transfer?amount=...&jetton=...)
-      const tonUsdtDeepLink = `ton://${config.TON_ADDRESS}/transfer?amount=${usdtAmount}&text=${encodeURIComponent(paymentReference)}&jetton=${config.USDT_CONTRACT_ADDRESS}`;
+      // Create TON Native USDT deep link (correct format: ton://transfer/ADDRESS?amount=...&jetton=...)
+      const tonUsdtDeepLink = `ton://transfer/${config.TON_ADDRESS}?amount=${usdtAmount}&text=${encodeURIComponent(paymentReference)}&jetton=${config.USDT_CONTRACT_ADDRESS}`;
       console.log(`🔗 TON USDT Deep Link: ${tonUsdtDeepLink}`);
       
       // Store payment reference for verification (store both amounts)
