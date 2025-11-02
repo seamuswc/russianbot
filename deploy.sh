@@ -39,12 +39,13 @@ ssh root@$SERVER_IP << EOF
   # Create data directory
   mkdir -p data
   
-  # Set up environment - copy from local .env if it exists
+  # Set up environment - ALWAYS create template (never copy from local git)
+  # User must manually add actual values directly on server
   if [ -f .env ]; then
-    echo "📋 Copying local .env file..."
-    cp .env .env.backup
+    echo "📋 Existing .env file found on server - keeping current values"
+    echo "💡 To update values, edit .env file manually on server"
   else
-    echo "⚠️  No local .env file found. Creating from template..."
+    echo "📋 Creating .env template file on server..."
     cat > .env << 'EOL'
 # Telegram Bot Configuration
 TELEGRAM_BOT_TOKEN=your-telegram-bot-token
@@ -72,7 +73,8 @@ NODE_ENV=production
 # Timezone
 TIMEZONE=Europe/Moscow
 EOL
-    echo "⚠️  Please update .env file with your actual API keys!"
+    echo "⚠️  IMPORTANT: Edit .env file on server to add your actual API keys!"
+    echo "⚠️  Use: nano /opt/russian-learning-bot/.env"
   fi
   
   # Create systemd service
