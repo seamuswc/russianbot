@@ -821,13 +821,91 @@ Practice writing the Russian sentence!`;
       return await deepseekService.generateRussianSentence(difficultyLevel);
     } catch (error) {
       console.error('❌ Error generating sentence:', error);
-      // Fallback sentence
+      // Fallback sentence - more challenging sentences appropriate for each level
       const fallbackSentences = {
-        1: { russian_text: 'Привет', english_translation: 'Hello', word_breakdown: [{ word: 'Привет', meaning: 'Hello', pronunciation: 'privet' }] },
-        2: { russian_text: 'Меня зовут Джон', english_translation: 'My name is John', word_breakdown: [{ word: 'Меня', meaning: 'me', pronunciation: 'menya' }, { word: 'зовут', meaning: 'call', pronunciation: 'zovut' }, { word: 'Джон', meaning: 'John', pronunciation: 'jon' }] },
-        3: { russian_text: 'Сегодня хорошая погода', english_translation: 'The weather is good today', word_breakdown: [{ word: 'Сегодня', meaning: 'today', pronunciation: 'sevodnya' }, { word: 'хорошая', meaning: 'good (feminine)', pronunciation: 'khoroshaya' }, { word: 'погода', meaning: 'weather', pronunciation: 'pogoda' }] },
-        4: { russian_text: 'Я люблю читать книги в библиотеке', english_translation: 'I like to read books in the library', word_breakdown: [{ word: 'Я', meaning: 'I', pronunciation: 'ya' }, { word: 'люблю', meaning: 'love/like', pronunciation: 'lyublyu' }, { word: 'читать', meaning: 'to read', pronunciation: 'chitat' }, { word: 'книги', meaning: 'books', pronunciation: 'knigi' }, { word: 'в', meaning: 'in', pronunciation: 'v' }, { word: 'библиотеке', meaning: 'library', pronunciation: 'biblioteke' }] },
-        5: { russian_text: 'Россия — это страна с богатой культурой и долгой историей', english_translation: 'Russia is a country with rich culture and long history', word_breakdown: [{ word: 'Россия', meaning: 'Russia', pronunciation: 'rossiya' }, { word: 'это', meaning: 'this is', pronunciation: 'eto' }, { word: 'страна', meaning: 'country', pronunciation: 'strana' }, { word: 'с', meaning: 'with', pronunciation: 's' }, { word: 'богатой', meaning: 'rich', pronunciation: 'bogatoy' }, { word: 'культурой', meaning: 'culture', pronunciation: 'kul\'turay' }, { word: 'и', meaning: 'and', pronunciation: 'i' }, { word: 'долгой', meaning: 'long', pronunciation: 'dolgoy' }, { word: 'историей', meaning: 'history', pronunciation: 'istoriyey' }] }
+        1: { 
+          russian_text: 'Добрый день! Как дела?', 
+          english_translation: 'Good day! How are you?', 
+          word_breakdown: [
+            { word: 'Добрый', meaning: 'good', pronunciation: 'dobryy' }, 
+            { word: 'день', meaning: 'day', pronunciation: 'den\'' }, 
+            { word: 'Как', meaning: 'how', pronunciation: 'kak' }, 
+            { word: 'дела', meaning: 'things/matters', pronunciation: 'dela' }
+          ] 
+        },
+        2: { 
+          russian_text: 'Я учу русский язык каждый день', 
+          english_translation: 'I study Russian language every day', 
+          word_breakdown: [
+            { word: 'Я', meaning: 'I', pronunciation: 'ya' }, 
+            { word: 'учу', meaning: 'study/learn', pronunciation: 'uchu' }, 
+            { word: 'русский', meaning: 'Russian', pronunciation: 'russkiy' }, 
+            { word: 'язык', meaning: 'language', pronunciation: 'yazyk' }, 
+            { word: 'каждый', meaning: 'every', pronunciation: 'kazhdyy' }, 
+            { word: 'день', meaning: 'day', pronunciation: 'den\'' }
+          ] 
+        },
+        3: { 
+          russian_text: 'Вчера я ходил в театр с друзьями', 
+          english_translation: 'Yesterday I went to the theater with friends', 
+          word_breakdown: [
+            { word: 'Вчера', meaning: 'yesterday', pronunciation: 'vchera' }, 
+            { word: 'я', meaning: 'I', pronunciation: 'ya' }, 
+            { word: 'ходил', meaning: 'went (past tense, masculine)', pronunciation: 'khodil' }, 
+            { word: 'в', meaning: 'to/in', pronunciation: 'v' }, 
+            { word: 'театр', meaning: 'theater', pronunciation: 'teatr' }, 
+            { word: 'с', meaning: 'with', pronunciation: 's' }, 
+            { word: 'друзьями', meaning: 'friends (instrumental case)', pronunciation: 'druz\'yami' }
+          ] 
+        },
+        4: { 
+          russian_text: 'Если бы я знал русский лучше, я бы читал классическую литературу', 
+          english_translation: 'If I knew Russian better, I would read classical literature', 
+          word_breakdown: [
+            { word: 'Если', meaning: 'if', pronunciation: 'yesli' }, 
+            { word: 'бы', meaning: 'would (conditional)', pronunciation: 'by' }, 
+            { word: 'я', meaning: 'I', pronunciation: 'ya' }, 
+            { word: 'знал', meaning: 'knew (past tense)', pronunciation: 'znal' }, 
+            { word: 'русский', meaning: 'Russian', pronunciation: 'russkiy' }, 
+            { word: 'лучше', meaning: 'better', pronunciation: 'luchshe' }, 
+            { word: 'я', meaning: 'I', pronunciation: 'ya' }, 
+            { word: 'бы', meaning: 'would', pronunciation: 'by' }, 
+            { word: 'читал', meaning: 'would read (past tense, masculine)', pronunciation: 'chital' }, 
+            { word: 'классическую', meaning: 'classical (accusative, feminine)', pronunciation: 'klassicheskuyu' }, 
+            { word: 'литературу', meaning: 'literature (accusative)', pronunciation: 'literaturu' }
+          ] 
+        },
+        5: { 
+          russian_text: 'Несмотря на то, что он изучал русский язык на протяжении многих лет, ему всё ещё трудно понимать сложные тексты, написанные в разных стилях и эпохах', 
+          english_translation: 'Despite the fact that he studied Russian language for many years, it is still difficult for him to understand complex texts written in different styles and eras', 
+          word_breakdown: [
+            { word: 'Несмотря', meaning: 'despite', pronunciation: 'nesmotrya' }, 
+            { word: 'на', meaning: 'on', pronunciation: 'na' }, 
+            { word: 'то', meaning: 'that', pronunciation: 'to' }, 
+            { word: 'что', meaning: 'that', pronunciation: 'chto' }, 
+            { word: 'он', meaning: 'he', pronunciation: 'on' }, 
+            { word: 'изучал', meaning: 'studied (past tense)', pronunciation: 'izuchal' }, 
+            { word: 'русский', meaning: 'Russian', pronunciation: 'russkiy' }, 
+            { word: 'язык', meaning: 'language', pronunciation: 'yazyk' }, 
+            { word: 'на', meaning: 'for', pronunciation: 'na' }, 
+            { word: 'протяжении', meaning: 'during/throughout', pronunciation: 'protyazhenii' }, 
+            { word: 'многих', meaning: 'many (genitive)', pronunciation: 'mnogikh' }, 
+            { word: 'лет', meaning: 'years (genitive)', pronunciation: 'let' }, 
+            { word: 'ему', meaning: 'to him (dative)', pronunciation: 'yemu' }, 
+            { word: 'всё', meaning: 'still', pronunciation: 'vsyo' }, 
+            { word: 'ещё', meaning: 'still', pronunciation: 'yeshcho' }, 
+            { word: 'трудно', meaning: 'difficult', pronunciation: 'trudno' }, 
+            { word: 'понимать', meaning: 'to understand', pronunciation: 'ponimat\'' }, 
+            { word: 'сложные', meaning: 'complex (accusative, plural)', pronunciation: 'slozhnyye' }, 
+            { word: 'тексты', meaning: 'texts (accusative)', pronunciation: 'teksty' }, 
+            { word: 'написанные', meaning: 'written (past passive participle)', pronunciation: 'napisannyye' }, 
+            { word: 'в', meaning: 'in', pronunciation: 'v' }, 
+            { word: 'разных', meaning: 'different (prepositional, plural)', pronunciation: 'raznykh' }, 
+            { word: 'стилях', meaning: 'styles (prepositional, plural)', pronunciation: 'stilyakh' }, 
+            { word: 'и', meaning: 'and', pronunciation: 'i' }, 
+            { word: 'эпохах', meaning: 'eras (prepositional, plural)', pronunciation: 'epokhakh' }
+          ] 
+        }
       };
       return fallbackSentences[difficultyLevel] || fallbackSentences[1];
     }
