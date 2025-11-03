@@ -114,7 +114,7 @@ class DeepSeekService {
           console.warn('⚠️ Generated text may not contain Cyrillic characters');
         }
         
-        // Add pronunciation if missing
+        // Add pronunciation if missing and normalize to lowercase
         if (parsed.word_breakdown && Array.isArray(parsed.word_breakdown)) {
           parsed.word_breakdown.forEach(word => {
             if (!word.pronunciation || word.pronunciation.trim() === '') {
@@ -132,6 +132,9 @@ class DeepSeekService {
                 'погода': 'pogoda'
               };
               word.pronunciation = pronunciationMap[word.word] || word.word.toLowerCase();
+            } else {
+              // Normalize pronunciation to lowercase (AI might return capitalized)
+              word.pronunciation = word.pronunciation.trim().toLowerCase();
             }
           });
         }

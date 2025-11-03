@@ -786,7 +786,7 @@ Here's your first lesson:`;
         wordBreakdown = '\n\n📚 Word Breakdown:\n';
         for (const word of sentenceData.word_breakdown) {
           if (typeof word === 'object' && word.word && word.meaning) {
-            const pronunciation = word.pronunciation || '';
+            const pronunciation = word.pronunciation ? word.pronunciation.trim().toLowerCase() : '';
             wordBreakdown += `${word.word} - ${word.meaning}${pronunciation ? ` - ${pronunciation}` : ''}\n`;
           } else if (typeof word === 'string') {
             wordBreakdown += `${word}\n`;
