@@ -133,7 +133,7 @@ class TelegramBotHandler {
 
       const welcomeMessage = `🇷🇺 Welcome to Russian Learning Bot!
 
-📖 Get daily Russian sentences and improve your language skills!
+📖 Get hourly Russian sentences and improve your language skills!
 💰 Subscribe with TON cryptocurrency for 30 days of lessons.
 
 🎯 Choose your difficulty level and start learning!`;
@@ -149,7 +149,7 @@ class TelegramBotHandler {
     const helpMessage = `🇷🇺 Russian Learning Bot Help
 
 📖 How it works:
-• Get daily Russian sentences at 9:00 AM Moscow time
+• Get hourly Russian sentences throughout the day
 • Practice with authentic Russian content
 
 💰 Subscription: $1 USD for 30 days
@@ -239,7 +239,7 @@ class TelegramBotHandler {
       }
       
       statusMessage += `Current Level: ${user.difficulty_level} (${levelName})\n\n`;
-      statusMessage += `Your daily lessons continue at 9:00 AM Moscow time.`;
+      statusMessage += `Your hourly lessons continue throughout the day.`;
 
       // Create keyboard based on subscription status
       const keyboard = subscription && subscription.status === 'active'
@@ -332,9 +332,9 @@ class TelegramBotHandler {
       const message = `💎 Subscribe to Russian Learning Bot
 
 ${priceMessage}    
-📅 Duration: 30 days of daily lessons        
+📅 Duration: 30 days of hourly lessons        
 🎯 What you get:
-• Daily Russian lessons
+• Hourly Russian lessons
 • Word-by-word breakdowns with pronunciation
 • Difficulty level customization
 
@@ -414,7 +414,7 @@ ${priceMessage}
       
       const levelName = config.DIFFICULTY_LEVELS[level]?.name || 'Unknown';
       
-      const confirmMessage = `✅ Difficulty updated to Level ${level}!\n\nYour daily lessons will now be at ${levelName} level.`;
+      const confirmMessage = `✅ Difficulty updated to Level ${level}!\n\nYour hourly lessons will now be at ${levelName} level.`;
 
       const keyboard = this.createKeyboard([
         [{ text: '🏠 Main Menu', callback_data: 'back_to_main' }]
@@ -444,7 +444,7 @@ ${priceMessage}
       // Cancel the subscription
       await database.cancelSubscription(userId.toString());
       
-      const message = `🚫 Subscription Cancelled\n\nYour subscription has been cancelled. You will no longer receive daily lessons.\n\nYou can resubscribe anytime using the Subscribe button.`;
+      const message = `🚫 Subscription Cancelled\n\nYour subscription has been cancelled. You will no longer receive hourly lessons.\n\nYou can resubscribe anytime using the Subscribe button.`;
       
       const keyboard = this.createKeyboard([
         [{ text: '💎 Subscribe Again', callback_data: 'subscribe' }],
@@ -727,7 +727,7 @@ ${priceMessage}
 
       const welcomeMessage = `🇷🇺 Welcome to Russian Learning Bot!
 
-📖 Get daily Russian sentences and improve your language skills!
+📖 Get hourly Russian sentences and improve your language skills!
 💰 Subscribe with TON cryptocurrency for 30 days of lessons.
 
 🎯 Choose your difficulty level and start learning!`;
@@ -752,7 +752,7 @@ ${priceMessage}
 
 ✅ You are now subscribed to Russian Learning Bot!
 📅 Your subscription is active for 30 days
-🎯 Daily lessons will be sent at 9:00 AM Moscow time
+🎯 Hourly lessons will be sent throughout the day
 
 Here's your first lesson:`;
 
@@ -937,11 +937,11 @@ Practice writing the Russian sentence!`;
     });
   }
 
-  // Send daily message to all subscribed users
+  // Send hourly message to all subscribed users
   async sendDailyMessage() {
     try {
-      // This would be implemented to send daily messages
-      console.log('📅 Daily message scheduler triggered');
+      // This would be implemented to send hourly messages
+      console.log('📅 Hourly message scheduler triggered');
     } catch (error) {
       console.error('❌ Error in sendDailyMessage:', error);
     }

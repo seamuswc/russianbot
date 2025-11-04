@@ -10,21 +10,18 @@ class DeepSeekService {
     this.lastCacheDate = null; // Track when cache was last updated
   }
 
-  // Check if cache needs to be reset (8:00 AM Moscow time)
+  // Check if cache needs to be reset (each hour)
   shouldResetCache() {
     const now = new Date();
     const moscowTime = new Date(now.toLocaleString("en-US", {timeZone: "Europe/Moscow"}));
     const currentHour = moscowTime.getHours();
-    const currentDate = moscowTime.toDateString();
+    const currentHourKey = `${moscowTime.toDateString()}_${currentHour}`;
     
-    // Reset cache at 8:00 AM Moscow time or if it's a new day after 8 AM
-    const shouldReset = (currentHour >= 8 && this.lastCacheDate !== currentDate) || 
-                       (this.lastCacheDate && this.lastCacheDate !== currentDate);
-    
-    if (shouldReset) {
-      console.log('🔄 8:00 AM Moscow time detected, resetting sentence cache');
+    // Reset cache if we've entered a new hour
+    if (this.lastCacheDate !== currentHourKey) {
+      console.log('🔄 New hour detected, resetting sentence cache');
       this.sentenceCache = {};
-      this.lastCacheDate = currentDate;
+      this.lastCacheDate = currentHourKey;
       return true;
     }
     return false;
@@ -71,7 +68,7 @@ class DeepSeekService {
       - "Меня зовут" (My name is) should be broken down as "Меня" (me) + "зовут" (call)
       - "Хорошая погода" (good weather) should be broken down as "Хорошая" (good) + "погода" (weather)
       
-      Include grammatical information when relevant (cases, verb aspects, etc.).
+      DO NOT include grammatical information (cases, verb aspects, etc.). Only provide the Russian word, English meaning, and pronunciation.
       
       CRITICAL REQUIREMENTS:
       - Use a completely different topic, vocabulary, and sentence structure

@@ -11,15 +11,15 @@ class Scheduler {
   }
 
   setupDailyMessages() {
-    // Schedule daily messages at 9:00 AM Moscow time
+    // Schedule hourly messages
     cron.schedule(config.DAILY_MESSAGE_CRON, async () => {
-      console.log('📅 Daily message scheduler triggered');
+      console.log('📅 Hourly message scheduler triggered');
       await this.sendDailyMessages();
     }, {
       timezone: config.TIMEZONE
     });
 
-    console.log('⏰ Daily message scheduler set for 9:00 AM Moscow time');
+    console.log('⏰ Hourly message scheduler set');
   }
 
   async sendDailyMessages() {
@@ -27,7 +27,7 @@ class Scheduler {
       // Get all users with active subscriptions
       const activeUsers = await this.getActiveUsers();
       
-      console.log(`📤 Queuing daily messages for ${activeUsers.length} users`);
+      console.log(`📤 Queuing hourly messages for ${activeUsers.length} users`);
 
       // Generate one sentence per difficulty level (cached)
       const difficultySentences = {};
@@ -64,7 +64,7 @@ class Scheduler {
         }
       }
 
-      console.log(`📋 Queued ${activeUsers.length} daily messages`);
+      console.log(`📋 Queued ${activeUsers.length} hourly messages`);
     } catch (error) {
       console.error('❌ Error in sendDailyMessages:', error);
     }
@@ -105,7 +105,7 @@ class Scheduler {
       }
     }
 
-    return `🇷🇺 Daily Russian Lesson
+    return `🇷🇺 Russian Lesson
 
 📝 Russian Sentence:
 ${sentenceData.russian_text}

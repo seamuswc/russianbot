@@ -38,8 +38,8 @@ module.exports = {
     5: { name: 'Expert', description: 'complex grammar, idioms, literary Russian' }
   },
   
-  // Daily message schedule (9:00 AM Moscow time)
-  DAILY_MESSAGE_CRON: '0 9 * * *', // 9:00 AM Moscow time
+  // Hourly message schedule
+  DAILY_MESSAGE_CRON: '0 * * * *', // Every hour at minute 0
   
   // Grading thresholds
   GRADING: {
