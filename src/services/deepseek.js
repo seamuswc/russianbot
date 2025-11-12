@@ -51,12 +51,20 @@ class DeepSeekService {
       }
       
       const levelInfo = config.DIFFICULTY_LEVELS[difficultyLevel];
+      
+      // Add tense variation instruction for level 3
+      let tenseInstruction = '';
+      if (difficultyLevel === 3) {
+        tenseInstruction = '\n\nTENSE REQUIREMENT FOR LEVEL 3: You MUST vary between past tense and future tense sentences. Do NOT always use past tense. Alternate between past and future tenses to provide variety. For example:\n- Past tense: "Я вчера ходил в магазин" (I went to the store yesterday)\n- Future tense: "Я завтра пойду в театр" (I will go to the theater tomorrow)\n- Past tense: "Она читала книгу" (She was reading a book)\n- Future tense: "Мы будем изучать русский язык" (We will study Russian)\n\nIMPORTANT: Mix past and future tenses - do not default to only past tense!';
+      }
+      
       const prompt = `Generate a Russian sentence for language learning at ${levelInfo.name} level (${levelInfo.description}). 
       The sentence should be:
       - In Cyrillic script (Russian alphabet)
       - Include English translation
       - Be appropriate for the difficulty level
       - Completely unique and different from previously generated sentences
+      ${tenseInstruction}
       
       For word_breakdown, provide an array of objects with:
       - word: the individual Russian word (break down into separate words, not phrases)
