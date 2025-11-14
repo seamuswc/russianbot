@@ -10,18 +10,20 @@ class DeepSeekService {
     this.lastCacheDate = null; // Track when cache was last updated
   }
 
-  // Check if cache needs to be reset (each hour)
+  // Check if cache needs to be reset (every 6 hours)
   shouldResetCache() {
     const now = new Date();
     const moscowTime = new Date(now.toLocaleString("en-US", {timeZone: "Europe/Moscow"}));
     const currentHour = moscowTime.getHours();
-    const currentHourKey = `${moscowTime.toDateString()}_${currentHour}`;
+    // Group hours into 6-hour blocks: 0-5, 6-11, 12-17, 18-23
+    const sixHourBlock = Math.floor(currentHour / 6);
+    const currentBlockKey = `${moscowTime.toDateString()}_${sixHourBlock}`;
     
-    // Reset cache if we've entered a new hour
-    if (this.lastCacheDate !== currentHourKey) {
-      console.log('🔄 New hour detected, resetting sentence cache');
+    // Reset cache if we've entered a new 6-hour block
+    if (this.lastCacheDate !== currentBlockKey) {
+      console.log('🔄 New 6-hour block detected, resetting sentence cache');
       this.sentenceCache = {};
-      this.lastCacheDate = currentHourKey;
+      this.lastCacheDate = currentBlockKey;
       return true;
     }
     return false;
@@ -41,13 +43,13 @@ class DeepSeekService {
     console.log(`🔄 Generating new sentence for difficulty ${difficultyLevel}`);
     
     try {
-      // Get recent sentences to avoid duplicates
-      const recentSentences = await database.getRecentSentences(difficultyLevel, 30);
+      // Get recent sentences to avoid duplicates (check last 50 sentences for better diversity)
+      const recentSentences = await database.getRecentSentences(difficultyLevel, 50);
       const recentRussianTexts = recentSentences.map(s => s.russian_text).filter(Boolean);
       
       let avoidPrompt = '';
       if (recentRussianTexts.length > 0) {
-        avoidPrompt = `\n\nCRITICAL: Do NOT generate any of these sentences that were recently used:\n${recentRussianTexts.slice(0, 10).map((text, i) => `${i + 1}. ${text}`).join('\n')}\n\nYou MUST create a completely different sentence with different words, topics, and structure. Do not repeat similar phrases or patterns.`;
+        avoidPrompt = `\n\nCRITICAL: Do NOT generate any of these sentences that were recently used:\n${recentRussianTexts.slice(0, 20).map((text, i) => `${i + 1}. ${text}`).join('\n')}\n\nYou MUST create a completely different sentence with different words, topics, and structure. Do not repeat similar phrases or patterns.`;
       }
       
       const levelInfo = config.DIFFICULTY_LEVELS[difficultyLevel];
@@ -78,11 +80,15 @@ class DeepSeekService {
       
       DO NOT include grammatical information (cases, verb aspects, etc.). Only provide the Russian word, English meaning, and pronunciation.
       
-      CRITICAL REQUIREMENTS:
-      - Use a completely different topic, vocabulary, and sentence structure
-      - Vary the topics: try different activities, places, foods, emotions, weather, etc.
-      - Avoid repeating similar sentence patterns or word combinations
-      - Be creative and diverse in your sentence generation${avoidPrompt}
+      CRITICAL REQUIREMENTS FOR MAXIMUM DIVERSITY:
+      - Use a completely different topic, vocabulary, and sentence structure from any previous sentences
+      - Vary topics extensively: activities (sports, hobbies, work, travel), places (cities, countries, buildings, nature), foods (different cuisines, meals, ingredients), emotions (happiness, sadness, excitement, fear), weather (seasons, conditions), family, friends, technology, culture, history, science, art, music, etc.
+      - Use different sentence structures: questions, statements, exclamations, different word orders
+      - Vary sentence length and complexity
+      - Use different verbs, nouns, adjectives - avoid repeating the same vocabulary
+      - Change perspectives: first person, second person, third person, singular, plural
+      - Be extremely creative and diverse - each sentence should feel fresh and unique
+      - If you see similar patterns in the recent sentences above, deliberately choose a different pattern, topic, and vocabulary${avoidPrompt}
 
       Format the response as JSON with fields: russian_text, english_translation, word_breakdown`;
 
@@ -94,7 +100,7 @@ class DeepSeekService {
             content: prompt
           }
         ],
-        temperature: 0.9, // Increased from 0.7 for more variation
+        temperature: 1.2, // High temperature for maximum creativity and diversity
         max_tokens: 1500
       }, {
         headers: {

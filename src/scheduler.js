@@ -11,15 +11,15 @@ class Scheduler {
   }
 
   setupDailyMessages() {
-    // Schedule hourly messages
+    // Schedule messages every 6 hours
     cron.schedule(config.DAILY_MESSAGE_CRON, async () => {
-      console.log('📅 Hourly message scheduler triggered');
+      console.log('📅 6-hour message scheduler triggered');
       await this.sendDailyMessages();
     }, {
       timezone: config.TIMEZONE
     });
 
-    console.log('⏰ Hourly message scheduler set');
+    console.log('⏰ 6-hour message scheduler set (every 6 hours)');
   }
 
   async sendDailyMessages() {
@@ -27,7 +27,7 @@ class Scheduler {
       // Get all users with active subscriptions
       const activeUsers = await this.getActiveUsers();
       
-      console.log(`📤 Queuing hourly messages for ${activeUsers.length} users`);
+      console.log(`📤 Queuing messages for ${activeUsers.length} users`);
 
       // Generate one sentence per difficulty level (cached)
       const difficultySentences = {};
@@ -64,7 +64,7 @@ class Scheduler {
         }
       }
 
-      console.log(`📋 Queued ${activeUsers.length} hourly messages`);
+      console.log(`📋 Queued ${activeUsers.length} messages`);
     } catch (error) {
       console.error('❌ Error in sendDailyMessages:', error);
     }
