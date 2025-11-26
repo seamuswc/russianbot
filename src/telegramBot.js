@@ -312,8 +312,7 @@ class TelegramBotHandler {
       this.pendingPayments.set(userId.toString(), recentPayments);
       
       // Create Telegram Wallet Mini App link with TON Connect
-      // Note: russianbot needs a domain with HTTPS for full TON Connect support
-      const paymentAppUrl = `${process.env.WEBHOOK_BASE_URL || 'https://russianbot.example.com'}/pay.html?address=${config.TON_ADDRESS}&amount=${tonAmountNano}&ton=${tonAmountForUSD.toFixed(4)}&ref=${encodeURIComponent(paymentReference)}&user=${userId}`;
+      const paymentAppUrl = `https://dailyrussian.xyz/pay.html?address=${config.TON_ADDRESS}&amount=${tonAmountNano}&ton=${tonAmountForUSD.toFixed(4)}&ref=${encodeURIComponent(paymentReference)}&user=${userId}`;
       console.log(`🔗 Payment App URL: ${paymentAppUrl}`);
       
       // Create payment buttons

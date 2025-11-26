@@ -253,9 +253,8 @@
     }
     
     // TON Connect configuration - specifically for Telegram Wallet
-    // Note: russianbot needs a domain with HTTPS for TON Connect to work properly
     const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-      manifestUrl: window.location.origin + '/tonconnect-manifest.json',
+      manifestUrl: 'https://dailyrussian.xyz/tonconnect-manifest.json',
       buttonRootId: 'ton-connect-button',
       uiPreferences: {
         theme: tg?.colorScheme === 'dark' ? 'DARK' : 'LIGHT'
