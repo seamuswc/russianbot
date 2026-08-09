@@ -31,8 +31,13 @@ npm start
 
 ## Deploy
 
+Runs on the **same droplet as riansi** (Thai bot).
+
 ```bash
 ./deploy.sh [server_ip]
 ```
 
-Default server: `178.128.109.61` → `/opt/russian-learning-bot`
+- Default server: `68.183.185.81`
+- App dir: `/opt/russian-learning-bot`
+- Port: `3002` (Thai bot uses `3000`)
+- systemd: `russian-learning-bot`

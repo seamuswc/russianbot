@@ -3,6 +3,10 @@ require('dotenv').config();
 module.exports = {
   // Telegram Bot Configuration
   TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
+  // Your Telegram user/chat id — gets a count ping after each scheduled send
+  ADMIN_TELEGRAM_ID: process.env.ADMIN_TELEGRAM_ID
+    ? parseInt(process.env.ADMIN_TELEGRAM_ID, 10)
+    : null,
 
   // DeepSeek API
   DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,

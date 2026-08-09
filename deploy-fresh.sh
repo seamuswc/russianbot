@@ -73,6 +73,7 @@ ssh root@$SERVER_IP << EOF
   cat > .env << 'EOL'
 # Telegram Bot Configuration
 TELEGRAM_BOT_TOKEN=your-telegram-bot-token
+ADMIN_TELEGRAM_ID=your-telegram-user-id
 
 # DeepSeek API
 DEEPSEEK_API_KEY=your-deepseek-api-key

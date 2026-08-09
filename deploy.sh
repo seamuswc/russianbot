@@ -1,13 +1,17 @@
 #!/bin/bash
 
 # Russian Learning Bot Deployment Script
+# Runs on the same droplet as riansi (Thai bot).
 # Usage: ./deploy.sh [server_ip]
 
-SERVER_IP=${1:-"178.128.109.61"}
+SERVER_IP=${1:-"68.183.185.81"}
 APP_DIR="/opt/russian-learning-bot"
 SERVICE_NAME="russian-learning-bot"
+PORT=3002
 
-echo "🚀 Deploying Russian Learning Bot to $SERVER_IP"
+echo "🚀 Deploying Russian Learning Bot to $SERVER_IP (alongside Thai bot)"
+echo "📁 App dir: $APP_DIR"
+echo "🔌 Port: $PORT"
 
 # Create deployment package
 echo "📦 Creating deployment package..."
@@ -26,49 +30,59 @@ scp russian-learning-bot.tar.gz root@$SERVER_IP:/tmp/
 # Deploy on server
 echo "🔧 Deploying on server..."
 ssh root@$SERVER_IP << EOF
-  # Create app directory
-  mkdir -p $APP_DIR
-  cd $APP_DIR
-  
-  # Extract files
+  set -e
+  APP_DIR="$APP_DIR"
+  SERVICE_NAME="$SERVICE_NAME"
+  PORT="$PORT"
+
+  mkdir -p \$APP_DIR
+  cd \$APP_DIR
+
   tar -xzf /tmp/russian-learning-bot.tar.gz
-  
-  # Install dependencies
   npm install --production
-  
-  # Create data directory
-  mkdir -p data
-  
-  # Set up environment - ALWAYS create template (never copy from local git)
-  # User must manually add actual values directly on server
+  mkdir -p data logs
+
   if [ -f .env ]; then
-    echo "📋 Existing .env file found on server - keeping current values"
-    echo "💡 To update values, edit .env file manually on server"
+    echo "📋 Existing .env kept"
+    # Ensure PORT is 3002 so we don't collide with Thai bot on 3000
+    if grep -q '^PORT=' .env; then
+      sed -i 's/^PORT=.*/PORT='"\$PORT"'/' .env
+    else
+      echo "PORT=\$PORT" >> .env
+    fi
   else
-    echo "📋 Creating .env template file on server..."
-    cat > .env << 'EOL'
+    echo "📋 Creating .env (reuse DeepSeek from Thai bot if present)..."
+    DEEPSEEK_VAL=""
+    if [ -f /opt/thai-learning-bot/.env ]; then
+      DEEPSEEK_VAL=\$(grep '^DEEPSEEK_API_KEY=' /opt/thai-learning-bot/.env | cut -d= -f2- || true)
+    fi
+    cat > .env << EOL
 # Telegram Bot Configuration
 TELEGRAM_BOT_TOKEN=your-telegram-bot-token
+ADMIN_TELEGRAM_ID=
 
 # DeepSeek API
-DEEPSEEK_API_KEY=your-deepseek-api-key
+DEEPSEEK_API_KEY=\${DEEPSEEK_VAL}
 
 # Database
 DATABASE_PATH=./data/bot.db
 
-# Server
-PORT=3000
+# Server (Thai bot uses 3000)
+PORT=\$PORT
 NODE_ENV=production
 
 # Timezone
 TIMEZONE=Europe/Moscow
 EOL
-    echo "⚠️  IMPORTANT: Edit .env file on server to add your actual API keys!"
-    echo "⚠️  Use: nano /opt/russian-learning-bot/.env"
+    # Expand DeepSeek into file properly
+    if [ -n "\$DEEPSEEK_VAL" ]; then
+      sed -i "s|^DEEPSEEK_API_KEY=.*|DEEPSEEK_API_KEY=\$DEEPSEEK_VAL|" .env
+      echo "✅ Copied DEEPSEEK_API_KEY from Thai bot"
+    fi
+    echo "⚠️  Set TELEGRAM_BOT_TOKEN (and optional ADMIN_TELEGRAM_ID) in \$APP_DIR/.env"
   fi
-  
-  # Create systemd service
-  cat > /etc/systemd/system/$SERVICE_NAME.service << EOL
+
+  cat > /etc/systemd/system/\$SERVICE_NAME.service << EOL
 [Unit]
 Description=Russian Learning Bot
 After=network.target
@@ -76,7 +90,7 @@ After=network.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=$APP_DIR
+WorkingDirectory=\$APP_DIR
 ExecStart=/usr/bin/node src/index.js
 Restart=always
 RestartSec=10
@@ -86,45 +100,21 @@ Environment=NODE_ENV=production
 WantedBy=multi-user.target
 EOL
 
-  # Stop any existing instances first
-  echo "🛑 Stopping any existing bot instances..."
-  pkill -f 'node.*src/index.js' || true
-  pkill -f 'node.*telegramBot' || true
-  sleep 2
-  
-  # Reload systemd and start service
+  # Only restart THIS service — do not kill Thai bot / other node apps
   systemctl daemon-reload
-  systemctl enable $SERVICE_NAME
-  systemctl restart $SERVICE_NAME
-  
-  # Wait for service to start
+  systemctl enable \$SERVICE_NAME
+  systemctl restart \$SERVICE_NAME
   sleep 3
-  
-  # Check status
-  systemctl status $SERVICE_NAME --no-pager
-  
-  # Verify only one instance is running
-  echo "🔍 Checking for multiple instances..."
-  INSTANCE_COUNT=\$(ps aux | grep 'src/index.js' | grep -v grep | wc -l)
-  if [ \$INSTANCE_COUNT -gt 1 ]; then
-    echo "⚠️  Warning: Multiple bot instances detected (\$INSTANCE_COUNT)"
-    echo "🛑 Stopping extra instances..."
-    pkill -f 'node.*src/index.js'
-    sleep 2
-    systemctl restart $SERVICE_NAME
-  else
-    echo "✅ Single bot instance confirmed"
-  fi
-  
-  echo "✅ Deployment completed!"
-  echo "📊 Service status:"
-  systemctl is-active $SERVICE_NAME
-  echo "📝 Logs: journalctl -u $SERVICE_NAME -f"
+  systemctl status \$SERVICE_NAME --no-pager || true
+
+  echo "✅ Russian bot deployment step done"
+  echo "📊 Service: \$(systemctl is-active \$SERVICE_NAME)"
+  echo "📝 Logs: journalctl -u \$SERVICE_NAME -f"
 EOF
 
-# Clean up
-rm russian-learning-bot.tar.gz
+rm -f russian-learning-bot.tar.gz
 
-echo "🎉 Deployment completed successfully!"
-echo "🌐 Health check: http://$SERVER_IP:3000/health"
-echo "📱 Bot should be running on Telegram"
+echo "🎉 Deploy finished"
+echo "🌐 Health: http://$SERVER_IP:$PORT/health"
+echo "📱 Ensure TELEGRAM_BOT_TOKEN is set in /opt/russian-learning-bot/.env"
+echo "🌍 Point dailyrussian.xyz DNS A record to $SERVER_IP (currently may still point elsewhere)"

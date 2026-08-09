@@ -39,6 +39,7 @@ class Scheduler {
         }
       }
 
+      let queued = 0;
       for (const user of users) {
         try {
           const sentenceData = difficultySentences[user.difficulty_level];
@@ -52,6 +53,7 @@ class Scheduler {
               continue;
             }
             messageQueue.addMessage(chatId, message);
+            queued += 1;
           } else {
             console.error(`❌ No sentence data for difficulty level ${user.difficulty_level}`);
           }
@@ -60,9 +62,37 @@ class Scheduler {
         }
       }
 
-      console.log(`📋 Queued ${users.length} messages`);
+      console.log(`📋 Queued ${queued} messages for ${users.length} registered users`);
+      await this.notifyAdminUserCount(users.length, queued);
     } catch (error) {
       console.error('❌ Error in sendDailyMessages:', error);
+    }
+  }
+
+  async notifyAdminUserCount(registeredCount, queuedCount) {
+    const adminId = config.ADMIN_TELEGRAM_ID;
+    const summary =
+      `📊 Russian bot send complete\n\n` +
+      `Registered users: ${registeredCount}\n` +
+      `Lessons queued: ${queuedCount}` +
+      (registeredCount === 0 ? '\n\n(No users yet.)' : '');
+
+    console.log(summary.replace(/\n/g, ' | '));
+
+    if (!adminId || Number.isNaN(adminId)) {
+      console.warn('⚠️ ADMIN_TELEGRAM_ID not set — skipping Telegram admin ping');
+      return;
+    }
+
+    try {
+      const telegram = this.bot?.bot;
+      if (!telegram) {
+        console.warn('⚠️ Telegram bot not ready for admin ping');
+        return;
+      }
+      await telegram.sendMessage(adminId, summary);
+    } catch (error) {
+      console.error('❌ Failed to notify admin of user count:', error.message);
     }
   }
 
