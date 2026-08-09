@@ -1,7 +1,7 @@
 {
-  "name": "thai-learning-bot",
+  "name": "russian-learning-bot",
   "version": "1.0.0",
-  "description": "Thai Language Learning Telegram Bot with TON payments",
+  "description": "Free Russian Language Learning Telegram Bot",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -23,11 +23,10 @@
   "keywords": [
     "telegram",
     "bot",
-    "thai",
+    "russian",
     "learning",
-    "ton",
-    "cryptocurrency"
+    "free"
   ],
-  "author": "Thai Learning Bot",
+  "author": "Daily Russian",
   "license": "MIT"
 }

@@ -77,16 +77,6 @@ TELEGRAM_BOT_TOKEN=your-telegram-bot-token
 # DeepSeek API
 DEEPSEEK_API_KEY=your-deepseek-api-key
 
-# TON Configuration
-TON_ADDRESS=your-ton-address
-SUBSCRIPTION_DAYS=30
-
-# TON Console API Key
-TON_API_KEY=your-ton-console-api-key
-
-# Webhook Configuration
-WEBHOOK_BASE_URL=https://dailyrussian.xyz
-
 # Database
 DATABASE_PATH=./data/bot.db
 
@@ -97,7 +87,7 @@ NODE_ENV=production
 # Timezone
 TIMEZONE=Europe/Moscow
 EOL
-  echo "✅ .env file created with bot token (other keys need to be added manually)"
+  echo "✅ .env file created — add TELEGRAM_BOT_TOKEN and DEEPSEEK_API_KEY on the server"
   
   # Create systemd service
   cat > /etc/systemd/system/$SERVICE_NAME.service << EOL

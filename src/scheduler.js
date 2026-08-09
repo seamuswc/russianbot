@@ -24,12 +24,11 @@ class Scheduler {
 
   async sendDailyMessages() {
     try {
-      // Get all users with active subscriptions
-      const activeUsers = await this.getActiveUsers();
-      
-      console.log(`📤 Queuing messages for ${activeUsers.length} users`);
+      // Free bot: send to every registered user (no subscription gate)
+      const users = await this.getAllUsers();
 
-      // Generate one sentence per difficulty level (cached)
+      console.log(`📤 Queuing messages for ${users.length} users`);
+
       const difficultySentences = {};
       for (let level = 1; level <= 5; level++) {
         try {
@@ -40,16 +39,13 @@ class Scheduler {
         }
       }
 
-      // Queue messages for all users
-      for (const user of activeUsers) {
+      for (const user of users) {
         try {
           const sentenceData = difficultySentences[user.difficulty_level];
           if (sentenceData) {
-            // Save sentence to database for tracking
             await this.saveSentence(sentenceData, user.difficulty_level);
-            
+
             const message = this.createDailyMessage(sentenceData);
-            // Convert telegram_user_id (string) to number for chatId (Telegram API requires number for private chats)
             const chatId = parseInt(user.telegram_user_id, 10);
             if (isNaN(chatId)) {
               console.error(`❌ Invalid chatId for user ${user.telegram_user_id}`);
@@ -64,24 +60,19 @@ class Scheduler {
         }
       }
 
-      console.log(`📋 Queued ${activeUsers.length} messages`);
+      console.log(`📋 Queued ${users.length} messages`);
     } catch (error) {
       console.error('❌ Error in sendDailyMessages:', error);
     }
   }
 
-  async getActiveUsers() {
+  async getAllUsers() {
     return new Promise((resolve, reject) => {
-      const query = `
-        SELECT u.*, s.expires_at 
-        FROM users u
-        JOIN subscriptions s ON u.telegram_user_id = s.telegram_user_id
-        WHERE s.status = 'active' AND s.expires_at > datetime('now')
-      `;
-      
+      const query = `SELECT * FROM users`;
+
       database.db.all(query, [], (err, rows) => {
         if (err) {
-          console.error('❌ Error getting active users:', err);
+          console.error('❌ Error getting users:', err);
           reject(err);
         } else {
           resolve(rows || []);
