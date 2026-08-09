@@ -46,7 +46,7 @@ class Scheduler {
           if (sentenceData) {
             await this.saveSentence(sentenceData, user.difficulty_level);
 
-            const message = this.createDailyMessage(sentenceData);
+            const message = this.createDailyMessage(sentenceData, users.length);
             const chatId = parseInt(user.telegram_user_id, 10);
             if (isNaN(chatId)) {
               console.error(`❌ Invalid chatId for user ${user.telegram_user_id}`);
@@ -111,7 +111,7 @@ class Scheduler {
     });
   }
 
-  createDailyMessage(sentenceData) {
+  createDailyMessage(sentenceData, subscriberCount = 0) {
     // Create word breakdown
     let wordBreakdown = '';
     if (sentenceData.word_breakdown && sentenceData.word_breakdown.length > 0) {
@@ -126,6 +126,12 @@ class Scheduler {
       }
     }
 
+    const peopleLabel = subscriberCount === 1 ? 'person' : 'people';
+    const subscribeLine =
+      subscriberCount > 0
+        ? `\n\n👥 ${subscriberCount} ${peopleLabel} subscribed`
+        : '';
+
     return `🇷🇺 Russian Lesson
 
 📝 Russian Sentence:
@@ -136,7 +142,7 @@ ${sentenceData.english_translation}
 
 Try typing the sentence back in Russian!${wordBreakdown}
 
-Practice writing the Russian sentence!`;
+Practice writing the Russian sentence!${subscribeLine}`;
   }
 
   async saveSentence(sentenceData, difficultyLevel) {
