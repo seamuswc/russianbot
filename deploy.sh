@@ -72,7 +72,7 @@ PORT=\$PORT
 NODE_ENV=production
 
 # Timezone
-TIMEZONE=Europe/Moscow
+TIMEZONE=Asia/Tokyo
 EOL
     # Expand DeepSeek into file properly
     if [ -n "\$DEEPSEEK_VAL" ]; then

@@ -51,7 +51,7 @@ class TelegramBotHandler {
   welcomeMessage() {
     return `🇷🇺 Welcome to Russian Learning Bot!
 
-📖 Free Russian lessons every 6 hours — no payment needed.
+📖 Free Russian lessons daily at 11:00 Tokyo time — no payment needed.
 🎯 Choose your difficulty level and start learning!`;
   }
 
@@ -122,7 +122,7 @@ class TelegramBotHandler {
     const helpMessage = `🇷🇺 Russian Learning Bot Help
 
 📖 How it works:
-• Free Russian sentences every 6 hours (4 times per day)
+• Free Russian sentences every day at 11:00 Tokyo time
 • Practice with authentic Russian content
 • No subscription or payment required
 
@@ -189,7 +189,7 @@ class TelegramBotHandler {
         `📊 Your Status\n\n` +
         `✅ Free access — lessons are always on\n` +
         `Current Level: ${user.difficulty_level} (${levelName})\n\n` +
-        `Your lessons are sent every 6 hours (4 times per day).`;
+        `Your lessons are sent every day at 11:00 Tokyo time.`;
 
       const keyboard = this.createKeyboard([
         [{ text: '🏠 Main Menu', callback_data: 'back_to_main' }]

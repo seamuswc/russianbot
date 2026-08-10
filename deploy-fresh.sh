@@ -3,7 +3,7 @@
 # Russian Learning Bot - Fresh Deployment Script
 # This script wipes the server and deploys fresh
 
-SERVER_IP=${1:-"178.128.109.61"}
+SERVER_IP=${1:-"68.183.185.81"}
 APP_DIR="/opt/russian-learning-bot"
 SERVICE_NAME="russian-learning-bot"
 
@@ -86,7 +86,7 @@ PORT=3000
 NODE_ENV=production
 
 # Timezone
-TIMEZONE=Europe/Moscow
+TIMEZONE=Asia/Tokyo
 EOL
   echo "✅ .env file created — add TELEGRAM_BOT_TOKEN and DEEPSEEK_API_KEY on the server"
   

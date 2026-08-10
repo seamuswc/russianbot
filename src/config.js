@@ -20,7 +20,7 @@ module.exports = {
   NODE_ENV: process.env.NODE_ENV || 'development',
 
   // Timezone
-  TIMEZONE: process.env.TIMEZONE || 'Europe/Moscow',
+  TIMEZONE: process.env.TIMEZONE || 'Asia/Tokyo',
 
   // Difficulty levels
   DIFFICULTY_LEVELS: {
@@ -31,8 +31,8 @@ module.exports = {
     5: { name: 'Expert', description: 'complex grammar, idioms, literary Russian' }
   },
 
-  // Message schedule (every 6 hours)
-  DAILY_MESSAGE_CRON: '0 */6 * * *', // 00:00, 06:00, 12:00, 18:00 Moscow time
+  // Message schedule: once daily at 11:00 Tokyo time
+  DAILY_MESSAGE_CRON: '0 11 * * *',
 
   // Grading thresholds
   GRADING: {

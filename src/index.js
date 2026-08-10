@@ -45,7 +45,7 @@ class RussianLearningBot {
     this.app.listen(config.PORT, () => {
       console.log(`🚀 Server running on port ${config.PORT}`);
       console.log(`🌍 Timezone: ${config.TIMEZONE}`);
-      console.log(`📅 Messages scheduled every 6 hours (free for all users)`);
+      console.log(`📅 Messages scheduled daily at 11:00 Tokyo (free for all users)`);
     });
   }
 

@@ -10,20 +10,16 @@ class DeepSeekService {
     this.lastCacheDate = null; // Track when cache was last updated
   }
 
-  // Check if cache needs to be reset (every 6 hours)
+  // Reset sentence cache once per Tokyo calendar day
   shouldResetCache() {
     const now = new Date();
-    const moscowTime = new Date(now.toLocaleString("en-US", {timeZone: "Europe/Moscow"}));
-    const currentHour = moscowTime.getHours();
-    // Group hours into 6-hour blocks: 0-5, 6-11, 12-17, 18-23
-    const sixHourBlock = Math.floor(currentHour / 6);
-    const currentBlockKey = `${moscowTime.toDateString()}_${sixHourBlock}`;
-    
-    // Reset cache if we've entered a new 6-hour block
-    if (this.lastCacheDate !== currentBlockKey) {
-      console.log('🔄 New 6-hour block detected, resetting sentence cache');
+    const tokyoTime = new Date(now.toLocaleString('en-US', { timeZone: config.TIMEZONE || 'Asia/Tokyo' }));
+    const currentDayKey = tokyoTime.toDateString();
+
+    if (this.lastCacheDate !== currentDayKey) {
+      console.log('🔄 New Tokyo day detected, resetting sentence cache');
       this.sentenceCache = {};
-      this.lastCacheDate = currentBlockKey;
+      this.lastCacheDate = currentDayKey;
       return true;
     }
     return false;

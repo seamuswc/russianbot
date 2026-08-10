@@ -1,13 +1,13 @@
 # Russian Learning Telegram Bot
 
-Free Telegram bot that helps English speakers learn Russian through sentences every 6 hours.
+Free Telegram bot that helps English speakers learn Russian through one sentence a day at 11:00 Tokyo time.
 
 **Bot:** [@DailyStudyRussianBot](https://t.me/DailyStudyRussianBot)  
 **Site:** [dailyrussian.xyz](https://dailyrussian.xyz)
 
 ## Features
 
-- Free Russian lessons every 6 hours (Moscow time) — no paywall
+- Free Russian lessons daily at 11:00 Tokyo time — no paywall
 - 5 difficulty levels
 - English translations + word breakdowns with pronunciation
 - First lesson on `/start`

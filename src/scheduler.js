@@ -11,15 +11,14 @@ class Scheduler {
   }
 
   setupDailyMessages() {
-    // Schedule messages every 6 hours
     cron.schedule(config.DAILY_MESSAGE_CRON, async () => {
-      console.log('📅 6-hour message scheduler triggered');
+      console.log('📅 Daily message scheduler triggered (11:00 Tokyo)');
       await this.sendDailyMessages();
     }, {
       timezone: config.TIMEZONE
     });
 
-    console.log('⏰ 6-hour message scheduler set (every 6 hours)');
+    console.log(`⏰ Daily message scheduler set (11:00 ${config.TIMEZONE})`);
   }
 
   async sendDailyMessages() {
